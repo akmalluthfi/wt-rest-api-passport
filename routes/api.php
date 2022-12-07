@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,7 @@ Route::post('login', [AuthController::class, 'authenticate']);
 Route::post('register', [AuthController::class, 'store']);
 
 Route::middleware('auth:api')->group(function () {
+
     Route::get('user', function (Request $request) {
         return $request->user();
     });
@@ -30,6 +32,12 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('books', BookController::class)->missing(function (Request $request) {
         return response()->json([
             'message' => 'Cannot found book with id: ' . $request->route('book')
+        ], 404);
+    });
+
+    Route::apiResource('products', ProductController::class)->missing(function (Request $request) {
+        return response()->json([
+            'message' => 'Cannot found product with id: ' . $request->route('product')
         ], 404);
     });
 });
